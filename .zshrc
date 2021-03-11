@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/orifuji/.oh-my-zsh"
+export ZSH="/Users/oichiro.fujii/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -100,44 +100,40 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# zplug
-source /usr/local/opt/zplug/init.zsh
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-# 非同期処理できるようになる
-zplug "mafredri/zsh-async"
-# テーマ(ここは好みで。調べた感じpureが人気)
-zplug "sindresorhus/pure"
-# 構文のハイライト(https://github.com/zsh-users/zsh-syntax-highlighting)
-zplug "zsh-users/zsh-syntax-highlighting"
-# コマンド入力途中で上下キー押したときの過去履歴がいい感じに出るようになる
-zplug "zsh-users/zsh-history-substring-search"
-# 過去に入力したコマンドの履歴が灰色のサジェストで出る
-zplug "zsh-users/zsh-autosuggestions"
-# 補完強化
-zplug "zsh-users/zsh-completions"
-# 256色表示にする
-zplug "chrissicool/zsh-256color"
-# コマンドライン上の文字リテラルの絵文字を emoji 化する
-zplug "mrowa44/emojify", as:command
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
+### Added by Zinit's installer
+if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
+    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
+        print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
-# コマンドの履歴機能
-# 履歴ファイルの保存先
-HISTFILE=$HOME/.zsh_history
-# メモリに保存される履歴の件数
-HISTSIZE=10000
-# HISTFILE で指定したファイルに保存される履歴の件数
-SAVEHIST=10000
-# Then, source plugins and add commands to $PATH
-zplug load
 
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "zsh-users/zsh-autosuggestions", defer:2
-zplug "b4b4r07/enhancd", use:enhancd.sh
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
-export PATH="/usr/local/sbin:$PATH"
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zinit-zsh/z-a-rust \
+    zinit-zsh/z-a-as-monitor \
+    zinit-zsh/z-a-patch-dl \
+    zinit-zsh/z-a-bin-gem-node
+
+# 非同期処理できるようになる
+zinit load "mafredri/zsh-async"
+# テーマ(ここは好みで。調べた感じpureが人気)
+zinit load "sindresorhus/pure"
+# 構文のハイライト(https://github.com/zsh-users/zsh-syntax-highlighting)
+zinit load "zsh-users/zsh-syntax-highlighting"
+# コマンド入力途中で上下キー押したときの過去履歴がいい感じに出るようになる
+zinit load "zsh-users/zsh-history-substring-search"
+# 過去に入力したコマンドの履歴が灰色のサジェストで出る
+zinit load zsh-users/zsh-autosuggestions
+# 補完強化
+zinit load zsh-users/zsh-completions
+# 256色表示にする
+zinit load chrissicool/zsh-256color
+
+### End of Zinit's installer chunk
